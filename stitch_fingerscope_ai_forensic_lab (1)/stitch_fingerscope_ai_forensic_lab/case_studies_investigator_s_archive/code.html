@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Investigator's Archive - FINGERSCOPE AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#4cd7f6", "inverse-primary": "#00687a", "surface-tint": "#4cd7f6", "on-primary-fixed": "#001f26", "primary-fixed": "#acedff", "on-secondary": "#002e6a", "on-primary-container": "#00424f", "tertiary-fixed-dim": "#ffb2b7", "surface-container": "#171f33", "on-secondary-fixed": "#001a42", "secondary-fixed": "#d8e2ff", "on-secondary-fixed-variant": "#004395", "surface-container-lowest": "#060e20", "surface-bright": "#31394d", "secondary-container": "#0566d9", "on-error": "#690005", "on-tertiary": "#67001b", "on-background": "#dae2fd", "outline-variant": "#3d494c", "surface-dim": "#0b1326", "primary-container": "#06b6d4", "tertiary-fixed": "#ffdadb", "inverse-surface": "#dae2fd", outline: "#869397", "on-tertiary-fixed-variant": "#92002a", "on-error-container": "#ffdad6", "tertiary-container": "#ff7f8b", "on-surface": "#dae2fd", "error-container": "#93000a", background: "#0b1326", error: "#ffb4ab", "inverse-on-surface": "#283044", tertiary: "#ffb2b7", surface: "#0b1326", "on-surface-variant": "#bcc9cd", secondary: "#adc6ff", primary: "#4cd7f6", "on-secondary-container": "#e6ecff", "on-tertiary-container": "#7d0023", "secondary-fixed-dim": "#adc6ff", "surface-container-low": "#131b2e", "on-primary": "#003640", "on-primary-fixed-variant": "#004e5c", "surface-variant": "#2d3449", "on-tertiary-fixed": "#40000d", "surface-container-highest": "#2d3449", "surface-container-high": "#222a3d"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"margin-page": "32px", "stack-sm": "8px", gutter: "16px", unit: "4px", "container-padding": "24px", "stack-md": "16px"}, fontFamily: {"headline-lg-mobile": ["Inter"], "display-lg": ["Inter"], "body-sm": ["Inter"], "body-lg": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "data-label": ["JetBrains Mono"], "data-value": ["JetBrains Mono"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Jetbrains Mono"]}, fontSize: {"headline-lg-mobile": ["24px", {lineHeight: "1.2", fontWeight: "700"}], "display-lg": ["32px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "1.6", fontWeight: "400"}], "headline-md": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "headline-sm": ["20px", {lineHeight: "1.4", fontWeight: "600"}], "data-label": ["12px", {lineHeight: "1.2", letterSpacing: "0.05em", fontWeight: "500"}], "data-value": ["14px", {lineHeight: "1.2", fontWeight: "600"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+        .ghost-border {
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen flex flex-col pt-16 pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface/60 backdrop-blur-md dark:bg-surface/60 fixed top-0 w-full z-50 border-b border-outline-variant/10 flex items-center px-margin-page h-16 max-w-none justify-between">
+<div class="flex items-center gap-2 hover:bg-primary/10 transition-colors cursor-pointer active:scale-95 duration-150 p-2 rounded-lg text-primary dark:text-primary">
+<span class="material-symbols-outlined">biometric_setup</span>
+<span class="font-headline-sm text-headline-sm font-bold tracking-tight">FINGERSCOPE AI</span>
+</div>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex items-center gap-6">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary/80 transition-all font-data-label text-data-label" href="#">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary/80 transition-all font-data-label text-data-label" href="#">
+<span class="material-symbols-outlined mb-1">fingerprint</span>
+                Analysis
+            </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary/80 transition-all font-data-label text-data-label" href="#">
+<span class="material-symbols-outlined mb-1">compare_arrows</span>
+                Comparison
+            </a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary font-bold font-data-label text-data-label border-b-2 border-primary pb-1" href="#">
+<span class="material-symbols-outlined mb-1 filled">school</span>
+                Academy
+            </a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center overflow-hidden ghost-border cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</header>
+<main class="flex-grow flex flex-col px-margin-page py-container-padding gap-gutter w-full max-w-5xl mx-auto">
+<div class="mb-8">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2">The Investigator's Archive</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Explore landmark cases and foundational practices in friction ridge analysis.</p>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap gap-3 mb-8">
+<button class="bg-primary/20 text-primary border border-primary/50 px-4 py-2 rounded-full font-data-value text-data-value flex items-center gap-2 hover:bg-primary/30 transition-colors">
+<span class="material-symbols-outlined text-sm">history_edu</span> Historical
+        </button>
+<button class="bg-surface-container-high text-on-surface-variant border border-outline-variant/30 px-4 py-2 rounded-full font-data-value text-data-value flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">account_balance</span> Landmark
+        </button>
+<button class="bg-surface-container-high text-on-surface-variant border border-outline-variant/30 px-4 py-2 rounded-full font-data-value text-data-value flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">science</span> Laboratory Practice
+        </button>
+</div>
+<!-- Case Studies List -->
+<div class="flex flex-col gap-6">
+<!-- Card 1 -->
+<article class="bg-surface-container-high/60 backdrop-blur-md rounded-xl ghost-border overflow-hidden flex flex-col md:flex-row group hover:border-primary/50 transition-colors">
+<div class="w-full md:w-64 h-48 md:h-auto bg-surface-dim relative flex-shrink-0">
+<img alt="Vintage fingerprint record" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFkNlgoQ_lDEdsus-qEpQlLWcV9Edrm58LgvnMV3fW7J5Y1XjH7c3IT5oEr3KbWFH77DvRVTwVn6vTHBHKkVq-ot24Nqxpc953YB3Ywxj24fc-22x08vKDJHKpHwW5--JBjDWqSPov3GMBjAk3XMphSCCro6SMV7UPWoUeTBj5xHsqUt1XciQMM70U7DLfEDtBBwdvNc86NmQNF2p49P16L6_mIhMAXYGBASER-N_ufxvprP8-oHBF"/>
+<div class="absolute top-2 left-2 bg-background/80 backdrop-blur px-2 py-1 rounded text-xs font-data-label text-primary border border-primary/20 uppercase tracking-wider">
+                    Historical
+                </div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">The Stratton Brothers Case (1905)</h2>
+<span class="bg-surface-dim border border-outline-variant/30 text-on-surface-variant px-2 py-1 rounded text-xs font-data-label uppercase">Beginner</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 flex-grow">
+                    A foundational case in British legal history. This module explores the first time fingerprint evidence was successfully used to secure a conviction in a murder trial in the UK, highlighting early comparison techniques.
+                </p>
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant/10">
+<h3 class="font-data-label text-data-label text-on-surface-variant uppercase tracking-wider mb-1">Key Learning Outcomes</h3>
+<ul class="list-disc list-inside font-body-sm text-body-sm text-secondary">
+<li>First use of fingerprints in UK courts</li>
+<li>Basic ridge characteristic identification</li>
+</ul>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-high/60 backdrop-blur-md rounded-xl ghost-border overflow-hidden flex flex-col md:flex-row group hover:border-primary/50 transition-colors">
+<div class="w-full md:w-64 h-48 md:h-auto bg-surface-dim relative flex-shrink-0">
+<img alt="Magnifying glass over documents" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALu28upEp4-wfsgcTsRd_NDnk3TX9cNH_tFnVVJj7GdtXDHbMtzqCr6Q8R4gqkXQLhtxF7Qi-qQ5k5xZPAvH7D60SMQBELtbOz65eEd2H861s6XwWh3KGPMg8xJGgmV2KBOqe1AfI237r1zesl4_n5lvpnCQqmJKpM_Qn6W1yHI2CO9dLGo9oXg7kwQeor4QRh-kWYrPud5iQsTwgyimL649uw1MIeKQjpyDJ-Kj6918hlWDgtCIIf"/>
+<div class="absolute top-2 left-2 bg-background/80 backdrop-blur px-2 py-1 rounded text-xs font-data-label text-primary border border-primary/20 uppercase tracking-wider">
+                    Landmark
+                </div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">The People v. Jennings (1911)</h2>
+<span class="bg-surface-dim border border-tertiary-container/30 text-tertiary-container px-2 py-1 rounded text-xs font-data-label uppercase">Advanced</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 flex-grow">
+                    The seminal US court case that established the scientific admissibility of fingerprint evidence. Students will review the original latent prints recovered from wet paint and the subsequent expert testimony.
+                </p>
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant/10">
+<h3 class="font-data-label text-data-label text-on-surface-variant uppercase tracking-wider mb-1">Key Learning Outcomes</h3>
+<ul class="list-disc list-inside font-body-sm text-body-sm text-secondary">
+<li>Admissibility standards in US Courts</li>
+<li>Analysis of prints on complex substrates</li>
+</ul>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-high/60 backdrop-blur-md rounded-xl ghost-border overflow-hidden flex flex-col md:flex-row group hover:border-primary/50 transition-colors">
+<div class="w-full md:w-64 h-48 md:h-auto bg-surface-dim relative flex-shrink-0">
+<img alt="Laboratory microscope" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_A5cbLTHMwYlnXcrTIKyyHtCQfzajqrm8o1CRWBFEhdTSKTzMhJxWirU1N2dyRkOC7bJ8mijvh1rxfnSi5ZUP3P4s3r1XAEpkHH7qHHKWCZu2ihQwhqz6eg70ilCItEOtBVY9eQ5k1WQcxwYthvjbya1lI7YojTQ7e8IyR8yG4aSl-PJ_DnYdXwB2lwQRer9gVXAkmNvKcvKmRH5gtIt0w5blNs2dnuA90RDa1r2wOGfW8RSGIOJN"/>
+<div class="absolute top-2 left-2 bg-background/80 backdrop-blur px-2 py-1 rounded text-xs font-data-label text-primary border border-primary/20 uppercase tracking-wider">
+                    Laboratory Practice
+                </div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex justify-between items-start mb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Cyanoacrylate Fuming Techniques</h2>
+<span class="bg-surface-dim border border-outline-variant/30 text-on-surface-variant px-2 py-1 rounded text-xs font-data-label uppercase">Intermediate</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 flex-grow">
+                    A modern procedural guide on the development of latent prints on non-porous surfaces using superglue fuming. Includes visual comparisons of over-fumed vs. optimally developed ridge detail.
+                </p>
+<div class="bg-surface-container-lowest p-3 rounded-lg border border-outline-variant/10">
+<h3 class="font-data-label text-data-label text-on-surface-variant uppercase tracking-wider mb-1">Key Learning Outcomes</h3>
+<ul class="list-disc list-inside font-body-sm text-body-sm text-secondary">
+<li>Chemical development procedures</li>
+<li>Identifying processing artifacts</li>
+</ul>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-t border-outline-variant/10 fixed bottom-0 left-0 w-full flex justify-around items-center h-20 px-stack-md pb-safe z-50 md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary/80 transition-all active:opacity-70 font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+        Dashboard
+    </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary/80 transition-all active:opacity-70 font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined mb-1">fingerprint</span>
+        Analysis
+    </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:text-primary/80 transition-all active:opacity-70 font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined mb-1">compare_arrows</span>
+        Comparison
+    </a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary font-bold hover:text-primary/80 transition-all active:opacity-70 font-body-sm text-body-sm" href="#">
+<span class="material-symbols-outlined mb-1 filled">school</span>
+        Academy
+    </a>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-stack-md px-margin-page flex flex-col md:flex-row justify-between items-center opacity-80 bg-surface-dim dark:bg-surface-dim border-t border-outline-variant/20 mt-auto hidden md:flex">
+<p class="font-data-label text-data-label text-on-surface-variant">© 2024 FINGERSCOPE AI. Educational Archive.</p>
+<div class="flex gap-4 mt-2 md:mt-0">
+<a class="font-data-label text-data-label text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Protocol</a>
+<a class="font-data-label text-data-label text-on-surface-variant hover:text-primary transition-colors" href="#">Methodology</a>
+<a class="font-data-label text-data-label text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</footer>
+</body></html>

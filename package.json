@@ -1,0 +1,15 @@
+{
+  "name": "fingerscope-ai",
+  "version": "1.0.0",
+  "description": "FINGERSCOPE AI Forensic Lab",
+  "scripts": {
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run dev --prefix BACKEND\" \"npm run dev --prefix FROTEND\"",
+    "start": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run dev --prefix BACKEND\" \"npm run dev --prefix FROTEND\"",
+    "dev:backend": "npm run dev --prefix BACKEND",
+    "dev:frontend": "npm run dev --prefix FROTEND",
+    "build:frontend": "npm run build --prefix FROTEND"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

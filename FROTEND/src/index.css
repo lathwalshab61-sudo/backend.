@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   FINGERSCOPE AI — Global Styles
+   ============================================ */
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-on-surface font-body antialiased;
+    min-height: max(884px, 100dvh);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Custom scrollbar — clinical/minimal */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-outline-variant rounded-full;
+  }
+
+  ::selection {
+    @apply bg-primary/30;
+  }
+}
+
+@layer components {
+  /* ---- Glassmorphism Panel ---- */
+  .glass-panel {
+    background-color: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  .glass-panel:hover {
+    border-color: #06b6d4;
+    background-color: rgba(30, 41, 59, 0.8);
+    box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.1);
+  }
+  .panel-glass {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .panel-glass:hover,
+  .panel-glass:focus-within {
+    border-color: #4cd7f6;
+    box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1);
+  }
+
+  /* ---- Ghost Border ---- */
+  .ghost-border {
+    border: 1px solid rgba(148, 163, 184, 0.1);
+  }
+
+  /* ---- Ridge-line background patterns ---- */
+  .bg-ridge-pattern {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(148, 163, 184, 0.03) 10px,
+      rgba(148, 163, 184, 0.03) 11px
+    );
+  }
+  .ridgeline-bg {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(76, 215, 246, 0.03) 0px,
+      rgba(76, 215, 246, 0.03) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  }
+  .fp-texture {
+    background-image: url("data:image/svg+xml;utf8,<svg width='100' height='100' xmlns='http://www.w3.org/2000/svg'><path d='M10 50 Q 50 10 90 50 T 90 90' stroke='rgba(76, 215, 246, 0.1)' stroke-width='2' fill='none'/></svg>");
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* ---- Grid pattern for viewer ---- */
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* ---- Reticle crosshair marker ---- */
+  .reticle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+  }
+  .reticle::before,
+  .reticle::after {
+    content: '';
+    position: absolute;
+    background-color: #06b6d4;
+  }
+  .reticle::before {
+    top: 0;
+    bottom: 0;
+    left: 11px;
+    width: 1px;
+  }
+  .reticle::after {
+    left: 0;
+    right: 0;
+    top: 11px;
+    height: 1px;
+  }
+
+  /* ---- Forensic markers ---- */
+  .core-marker {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #06b6d4;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .delta-marker {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 14px solid #06b6d4;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* ---- Scanline animation ---- */
+  .scanline {
+    background: linear-gradient(to bottom, transparent 0%, rgba(6, 182, 212, 0.2) 50%, transparent 100%);
+    height: 4px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    animation: scan 3s infinite linear;
+  }
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(800px); }
+  }
+
+  /* ---- Material Symbols defaults ---- */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-size: 24px;
+    line-height: 1;
+    vertical-align: middle;
+  }
+  .material-symbols-outlined.filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+
+  /* ---- Reticle cursor ---- */
+  .reticle-cursor {
+    cursor: crosshair;
+  }
+
+  /* ---- Focus border utility ---- */
+  .focus-border:focus-within {
+    border-color: #06b6d4;
+  }
+}

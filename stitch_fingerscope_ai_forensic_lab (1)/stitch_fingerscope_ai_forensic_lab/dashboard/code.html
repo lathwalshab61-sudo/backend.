@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FINGERSCOPE AI - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#4cd7f6", "inverse-primary": "#00687a", "surface-tint": "#4cd7f6", "on-primary-fixed": "#001f26", "primary-fixed": "#acedff", "on-secondary": "#002e6a", "on-primary-container": "#00424f", "tertiary-fixed-dim": "#ffb2b7", "surface-container": "#171f33", "on-secondary-fixed": "#001a42", "secondary-fixed": "#d8e2ff", "on-secondary-fixed-variant": "#004395", "surface-container-lowest": "#060e20", "surface-bright": "#31394d", "secondary-container": "#0566d9", "on-error": "#690005", "on-tertiary": "#67001b", "on-background": "#dae2fd", "outline-variant": "#3d494c", "surface-dim": "#0b1326", "primary-container": "#06b6d4", "tertiary-fixed": "#ffdadb", "inverse-surface": "#dae2fd", outline: "#869397", "on-tertiary-fixed-variant": "#92002a", "on-error-container": "#ffdad6", "tertiary-container": "#ff7f8b", "on-surface": "#dae2fd", "error-container": "#93000a", background: "#0b1326", error: "#ffb4ab", "inverse-on-surface": "#283044", tertiary: "#ffb2b7", surface: "#0b1326", "on-surface-variant": "#bcc9cd", secondary: "#adc6ff", primary: "#4cd7f6", "on-secondary-container": "#e6ecff", "on-tertiary-container": "#7d0023", "secondary-fixed-dim": "#adc6ff", "surface-container-low": "#131b2e", "on-primary": "#003640", "on-primary-fixed-variant": "#004e5c", "surface-variant": "#2d3449", "on-tertiary-fixed": "#40000d", "surface-container-highest": "#2d3449", "surface-container-high": "#222a3d"}, borderRadius: {DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem"}, spacing: {"margin-page": "32px", "stack-sm": "8px", gutter: "16px", unit: "4px", "container-padding": "24px", "stack-md": "16px"}, fontFamily: {"headline-lg-mobile": ["Inter"], "display-lg": ["Inter"], "body-sm": ["Inter"], "body-lg": ["Inter"], "headline-md": ["Inter"], "headline-sm": ["Inter"], "data-label": ["JetBrains Mono"], "data-value": ["JetBrains Mono"], headline: ["Inter"], display: ["Inter"], body: ["Inter"], label: ["Jetbrains Mono"]}, fontSize: {"headline-lg-mobile": ["24px", {lineHeight: "1.2", fontWeight: "700"}], "display-lg": ["32px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], "body-lg": ["16px", {lineHeight: "1.6", fontWeight: "400"}], "headline-md": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "headline-sm": ["20px", {lineHeight: "1.4", fontWeight: "600"}], "data-label": ["12px", {lineHeight: "1.2", letterSpacing: "0.05em", fontWeight: "500"}], "data-value": ["14px", {lineHeight: "1.2", fontWeight: "600"}]}}}};</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Jetbrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-panel {
+            background-color: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .glass-panel:hover {
+            border-color: #06B6D4;
+            background-color: rgba(30, 41, 59, 0.8);
+            box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.1);
+        }
+        .bg-ridge-pattern {
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(148, 163, 184, 0.03) 10px, rgba(148, 163, 184, 0.03) 11px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Abstract Ridge Background -->
+<div class="fixed inset-0 pointer-events-none bg-ridge-pattern z-0 opacity-50"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full bg-surface-container/60 dark:bg-surface-container/60 backdrop-blur-md border-b border-outline-variant/10 flex items-center justify-between px-margin-page h-16 z-50">
+<div class="flex items-center gap-gutter cursor-pointer active:opacity-80 hover:bg-primary/10 transition-colors p-2 rounded">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="fingerprint">fingerprint</span>
+<span class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary dark:text-primary-fixed-dim">FINGERSCOPE AI</span>
+</div>
+<!-- Web Nav -->
+<nav class="hidden md:flex gap-margin-page items-center">
+<div class="flex items-center gap-2 cursor-pointer text-primary transition-colors hover:text-primary border-b-2 border-primary pb-1">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-data-label text-data-label">Dashboard</span>
+</div>
+<div class="flex items-center gap-2 cursor-pointer text-on-surface-variant hover:text-primary transition-colors pb-1">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+<span class="font-data-label text-data-label">Analysis</span>
+</div>
+<div class="flex items-center gap-2 cursor-pointer text-on-surface-variant hover:text-primary transition-colors pb-1">
+<span class="material-symbols-outlined" data-icon="compare">compare</span>
+<span class="font-data-label text-data-label">Comparison</span>
+</div>
+<div class="flex items-center gap-2 cursor-pointer text-on-surface-variant hover:text-primary transition-colors pb-1">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-data-label text-data-label">Academy</span>
+</div>
+</nav>
+<div class="flex items-center gap-gutter cursor-pointer active:opacity-80 hover:bg-primary/10 transition-colors p-2 rounded">
+<span class="font-data-label text-data-label text-on-surface-variant hidden md:block">Investigator Profile</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="person">person</span>
+</div>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 md:pb-24 px-margin-page max-w-[1440px] mx-auto w-full z-10 flex flex-col gap-margin-page">
+<!-- Hero / Header -->
+<section class="flex flex-col gap-stack-md py-stack-md border-b border-outline-variant/20">
+<h1 class="font-display-lg text-display-lg">Dashboard</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">AI-Assisted Fingerprint Examination &amp; Comparison</p>
+<div class="mt-stack-sm p-4 border border-outline-variant/30 bg-surface-container-low rounded flex items-start gap-4">
+<span class="material-symbols-outlined text-primary-container mt-1" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<strong class="text-on-surface">AI Safety Disclaimer:</strong> FINGERSCOPE AI provides AI-assisted observations for educational and forensic support. Results require qualified human examiner verification.
+                 </p>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Col (Actions & Overview) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<h2 class="font-headline-sm text-headline-sm border-b border-outline-variant/10 pb-2 mb-2">Quick Actions</h2>
+<div class="glass-panel p-container-padding rounded-lg flex flex-col gap-stack-sm cursor-pointer transition-all hover:-translate-y-1">
+<div class="w-10 h-10 rounded bg-primary-container/20 flex items-center justify-center text-primary-container mb-2">
+<span class="material-symbols-outlined" data-icon="troubleshoot">troubleshoot</span>
+</div>
+<h3 class="font-data-value text-data-value text-primary-fixed-dim">Analyze Fingerprint</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Upload single sample for minutiae extraction.</p>
+</div>
+<div class="glass-panel p-container-padding rounded-lg flex flex-col gap-stack-sm cursor-pointer transition-all hover:-translate-y-1">
+<div class="w-10 h-10 rounded bg-secondary-container/20 flex items-center justify-center text-secondary mb-2">
+<span class="material-symbols-outlined" data-icon="compare_arrows">compare_arrows</span>
+</div>
+<h3 class="font-data-value text-data-value text-secondary">Compare Two Samples</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">1-to-1 match probability analysis.</p>
+</div>
+<div class="glass-panel p-container-padding rounded-lg flex flex-col gap-stack-sm cursor-pointer transition-all hover:-translate-y-1">
+<div class="w-10 h-10 rounded bg-tertiary-container/20 flex items-center justify-center text-tertiary mb-2">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+</div>
+<h3 class="font-data-value text-data-value text-tertiary">Learning Center</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Training modules and methodology documentation.</p>
+</div>
+<!-- System Status -->
+<div class="mt-auto p-4 border border-outline-variant/10 rounded">
+<h4 class="font-data-label text-data-label text-on-surface-variant mb-2 uppercase">System Status</h4>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary-fixed-dim animate-pulse"></div>
+<span class="font-data-value text-data-value text-primary-fixed-dim">Core Analysis Engine Online</span>
+</div>
+</div>
+</div>
+<!-- Right Col (Recent Analyses) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<div class="flex items-center justify-between border-b border-outline-variant/10 pb-2 mb-2">
+<h2 class="font-headline-sm text-headline-sm">Recent Analyses</h2>
+<button class="font-data-label text-data-label text-primary hover:underline bg-transparent border-0 flex items-center gap-1">
+                        View All <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<!-- List Item 1 -->
+<div class="glass-panel p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded group">
+<div class="flex items-center gap-4">
+<span class="font-data-label text-data-label text-outline w-8">01</span>
+<div>
+<h3 class="font-data-value text-data-value text-primary-fixed-dim font-bold">FS-2024-081</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Oct 24, 2024 • 14:32 Z</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+<span class="px-2 py-1 bg-surface-variant rounded border border-outline-variant/30 font-data-label text-data-label text-on-surface">Right Thumb - Whorl</span>
+<!-- Status Indicator -->
+<div class="flex items-center gap-1 px-2 py-1 bg-secondary-container/20 border border-secondary/30 rounded">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="pending">pending</span>
+<span class="font-data-label text-data-label text-secondary">Human Verif. Needed</span>
+</div>
+<button class="ml-auto sm:ml-2 text-on-surface-variant hover:text-primary transition-colors bg-transparent border-0">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="glass-panel p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded group">
+<div class="flex items-center gap-4">
+<span class="font-data-label text-data-label text-outline w-8">02</span>
+<div>
+<h3 class="font-data-value text-data-value text-primary-fixed-dim font-bold">FS-2024-080</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Oct 24, 2024 • 11:15 Z</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+<span class="px-2 py-1 bg-surface-variant rounded border border-outline-variant/30 font-data-label text-data-label text-on-surface">Left Index - Loop</span>
+<!-- Status Indicator -->
+<div class="flex items-center gap-1 px-2 py-1 bg-primary-container/10 border border-primary/30 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="verified">verified</span>
+<span class="font-data-label text-data-label text-primary">Verified</span>
+</div>
+<button class="ml-auto sm:ml-2 text-on-surface-variant hover:text-primary transition-colors bg-transparent border-0">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="glass-panel p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded group">
+<div class="flex items-center gap-4">
+<span class="font-data-label text-data-label text-outline w-8">03</span>
+<div>
+<h3 class="font-data-value text-data-value text-primary-fixed-dim font-bold">FS-2024-079</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Oct 23, 2024 • 09:45 Z</p>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+<span class="px-2 py-1 bg-surface-variant rounded border border-outline-variant/30 font-data-label text-data-label text-on-surface">Unknown - Arch</span>
+<!-- Status Indicator -->
+<div class="flex items-center gap-1 px-2 py-1 bg-error-container/20 border border-error/30 rounded">
+<span class="material-symbols-outlined text-[14px] text-error" data-icon="warning">warning</span>
+<span class="font-data-label text-data-label text-error">Anomaly Detected</span>
+</div>
+<button class="ml-auto sm:ml-2 text-on-surface-variant hover:text-primary transition-colors bg-transparent border-0">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-stack-sm pb-safe px-4 bg-surface-dim/90 backdrop-blur-xl border-t border-outline-variant/10 z-50">
+<div class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" data-icon="dashboard" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-data-label text-[10px] mt-1">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+<span class="font-data-label text-[10px] mt-1">Analysis</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" data-icon="compare">compare</span>
+<span class="font-data-label text-[10px] mt-1">Comparison</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-data-label text-[10px] mt-1">Academy</span>
+</div>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-stack-md px-margin-page flex flex-col md:flex-row justify-between items-center opacity-80 bg-surface-dim dark:bg-surface-dim border-t border-outline-variant/20 mb-16 md:mb-0 z-10 relative">
+<p class="font-data-label text-data-label text-tertiary dark:text-tertiary text-center md:text-left mb-4 md:mb-0 max-w-2xl">
+<span class="font-bold text-primary">© 2024 FINGERSCOPE AI.</span> AI-assisted analysis: results require human verification for legal forensic standards.
+        </p>
+<div class="flex gap-4">
+<a class="font-data-label text-data-label text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Protocol</a>
+<a class="font-data-label text-data-label text-on-surface-variant hover:text-primary transition-colors" href="#">Methodology</a>
+<a class="font-data-label text-data-label text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</footer>
+</body></html>
