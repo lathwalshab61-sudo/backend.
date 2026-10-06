@@ -18,12 +18,4 @@ export default function Footer({ note }) {
       </div>
     </footer>
   );
-} export const minutiaeList = [
-  { id: '01', type: 'circle', label: 'Ridge Ending (Central)', confidence: '98%', color: 'text-primary', borderColor: 'border-primary' },
-  { id: '02', type: 'square', label: 'Bifurcation (Upper-Left)', confidence: '91%', color: 'text-secondary', borderColor: 'border-secondary' },
-  { id: '03', type: 'square', label: 'Bifurcation (Lower-Right)', confidence: '87%', color: 'text-secondary', borderColor: 'border-secondary' },
-  { id: '04', type: 'circle', label: 'Short Ridge (Central-Right)', confidence: '82%', color: 'text-primary', borderColor: 'border-primary' },
-  { id: '05', type: 'square', label: 'Enclosure (Upper)', confidence: '79%', color: 'text-secondary', borderColor: 'border-secondary' },
-  8
-];
-
+}

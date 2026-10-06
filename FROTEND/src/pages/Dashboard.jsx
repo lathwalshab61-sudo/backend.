@@ -1,7 +1,10 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GlassPanel from '../components/GlassPanel';
 import StatusBadge from '../components/StatusBadge';
 import Footer from '../components/Footer';
+import { defaultRecentAnalyses } from '../constants/data';
+import { getRecentAnalyses, getHealth } from '../services/api';
 
 const quickActions = [
   {
@@ -33,32 +36,43 @@ const quickActions = [
   },
 ];
 
-const recentAnalyses = [
-  {
-    id: 'FS-2024-081',
-    idx: '01',
-    date: 'Oct 24, 2024 • 14:32 Z',
-    tag: 'Right Thumb - Whorl',
-    status: 'pending',
-  },
-  {
-    id: 'FS-2024-080',
-    idx: '02',
-    date: 'Oct 24, 2024 • 11:15 Z',
-    tag: 'Left Index - Loop',
-    status: 'verified',
-  },
-  {
-    id: 'FS-2024-079',
-    idx: '03',
-    date: 'Oct 23, 2024 • 09:45 Z',
-    tag: 'Unknown - Arch',
-    status: 'anomaly',
-  },
-];
-
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [analyses, setAnalyses] = useState(defaultRecentAnalyses);
+  const [backendStatus, setBackendStatus] = useState('Checking engine...');
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadData() {
+      // Check health
+      const health = await getHealth();
+      if (isMounted) {
+        if (health.status === 'ok') {
+          const dbConnected = health.database?.connected;
+          setBackendStatus(
+            dbConnected ? 'Core Engine & Database Online' : 'Core Engine Online (Fallback Mode)'
+          );
+          setIsOnline(true);
+        } else {
+          setBackendStatus('Offline / Standalone Mode');
+          setIsOnline(false);
+        }
+      }
+
+      // Fetch analyses
+      const data = await getRecentAnalyses();
+      if (isMounted && data && Array.isArray(data) && data.length > 0) {
+        setAnalyses(data);
+      }
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="bg-surface text-on-surface min-h-screen flex flex-col relative overflow-x-hidden">
@@ -109,9 +123,9 @@ export default function Dashboard() {
                 System Status
               </h4>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary-fixed-dim animate-pulse" />
+                <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-primary-fixed-dim animate-pulse' : 'bg-secondary'}`} />
                 <span className="font-data-value text-data-value text-primary-fixed-dim">
-                  Core Analysis Engine Online
+                  {backendStatus}
                 </span>
               </div>
             </div>
@@ -125,13 +139,13 @@ export default function Dashboard() {
                 onClick={() => navigate('/analysis')}
                 className="font-data-label text-data-label text-primary hover:underline bg-transparent border-0 flex items-center gap-1"
               >
-                View All{' '}
+                New Scan{' '}
                 <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
               </button>
             </div>
 
             <div className="flex flex-col gap-2">
-              {recentAnalyses.map((item) => (
+              {analyses.map((item) => (
                 <GlassPanel
                   key={item.id}
                   className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group"
@@ -151,7 +165,7 @@ export default function Dashboard() {
                     </span>
                     <StatusBadge status={item.status} />
                     <button
-                      onClick={() => navigate('/analysis/result')}
+                      onClick={() => navigate('/analysis/result', { state: { analysisData: item } })}
                       className="ml-auto sm:ml-2 text-on-surface-variant hover:text-primary transition-colors bg-transparent border-0"
                     >
                       <span className="material-symbols-outlined">chevron_right</span>

@@ -1,16 +1,38 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../components/Footer';
-
-const archiveEntries = [
-  { id: 'CASE-2024-001', title: 'EXH-042 — Latent Lift Analysis', examiner: 'J. Morrison', date: 'Oct 24, 2024', status: 'Verified', statusColor: 'text-primary', tag: 'Right Thumb · Whorl' },
-  { id: 'CASE-2024-002', title: 'REF-991 — Tenprint Comparison', examiner: 'A. Reyes', date: 'Oct 22, 2024', status: 'Pending Review', statusColor: 'text-secondary', tag: 'Left Index · Loop' },
-  { id: 'CASE-2024-003', title: 'EXH-039 — Partial Print Recovery', examiner: 'J. Morrison', date: 'Oct 19, 2024', status: 'Anomaly', statusColor: 'text-error', tag: 'Unknown · Arch' },
-  { id: 'CASE-2024-004', title: 'LAT-017 — Smudged Ridge Analysis', examiner: 'C. Park', date: 'Oct 15, 2024', status: 'Verified', statusColor: 'text-primary', tag: 'Right Middle · Loop' },
-  { id: 'CASE-2023-099', title: 'CMP-088 — Cross-Reference Study', examiner: 'A. Reyes', date: 'Dec 01, 2023', status: 'Verified', statusColor: 'text-primary', tag: 'Comparative · Whorl/Loop' },
-];
+import { defaultArchiveCases } from '../constants/data';
+import { getCases } from '../services/api';
 
 export default function InvestigatorArchive() {
   const navigate = useNavigate();
+  const [cases, setCases] = useState(defaultArchiveCases);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCases() {
+      const data = await getCases();
+      if (isMounted && data && Array.isArray(data) && data.length > 0) {
+        setCases(data);
+      }
+    }
+    loadCases();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const filteredCases = cases.filter((c) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      (c.id && c.id.toLowerCase().includes(q)) ||
+      (c.title && c.title.toLowerCase().includes(q)) ||
+      (c.examiner && c.examiner.toLowerCase().includes(q)) ||
+      (c.tag && c.tag.toLowerCase().includes(q)) ||
+      (c.status && c.status.toLowerCase().includes(q))
+    );
+  });
 
   return (
     <div className="bg-background text-on-surface font-body-lg min-h-screen flex flex-col pt-16 pb-24 md:pb-0">
@@ -52,13 +74,19 @@ export default function InvestigatorArchive() {
           <span className="material-symbols-outlined text-outline">search</span>
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search cases by ID, examiner, or tag..."
             className="flex-grow bg-transparent font-data-value text-data-value text-on-surface placeholder:text-outline focus:outline-none"
           />
-          <button className="font-data-label text-data-label text-primary hover:underline flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">filter_list</span>
-            Filter
-          </button>
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="text-outline hover:text-on-surface text-xs font-data-label"
+            >
+              Clear
+            </button>
+          )}
         </div>
 
         {/* Table Header */}
@@ -72,32 +100,52 @@ export default function InvestigatorArchive() {
 
         {/* Archive Entries */}
         <div className="flex flex-col gap-2">
-          {archiveEntries.map((entry, i) => (
-            <div
-              key={entry.id}
-              className="glass-panel grid grid-cols-12 gap-4 p-4 items-center rounded group cursor-pointer"
-              onClick={() => navigate('/analysis/result')}
-            >
-              <div className="col-span-1">
-                <span className="font-data-label text-data-label text-outline">{String(i + 1).padStart(2, '0')}</span>
-              </div>
-              <div className="col-span-3 md:col-span-3">
-                <div className="font-data-value text-data-value text-primary-fixed-dim font-bold">{entry.id}</div>
-                <div className="font-data-label text-data-label text-outline text-[10px]">{entry.date}</div>
-              </div>
-              <div className="col-span-5 md:col-span-4 hidden md:block">
-                <div className="font-body-sm text-body-sm text-on-surface">{entry.title}</div>
-                <span className="font-data-label text-data-label text-[10px] text-on-surface-variant">{entry.tag}</span>
-              </div>
-              <div className="col-span-2 hidden md:block">
-                <span className="font-data-label text-data-label text-on-surface-variant">{entry.examiner}</span>
-              </div>
-              <div className="col-span-8 md:col-span-2 flex items-center justify-between">
-                <span className={`font-data-label text-data-label ${entry.statusColor}`}>{entry.status}</span>
-                <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
-              </div>
+          {filteredCases.length === 0 ? (
+            <div className="p-8 text-center panel-glass rounded-lg text-on-surface-variant">
+              No matching cases found for "{searchQuery}".
             </div>
-          ))}
+          ) : (
+            filteredCases.map((entry, i) => (
+              <div
+                key={entry.id}
+                className="glass-panel grid grid-cols-12 gap-4 p-4 items-center rounded group cursor-pointer hover:border-primary/40 transition-colors"
+                onClick={() =>
+                  navigate('/analysis/result', {
+                    state: {
+                      analysisData: {
+                        caseId: entry.id,
+                        patternType: entry.tag || 'Loop (Ulnar)',
+                        status: entry.status?.toLowerCase() === 'verified' ? 'verified' : 'pending',
+                      },
+                    },
+                  })
+                }
+              >
+                <div className="col-span-1">
+                  <span className="font-data-label text-data-label text-outline">{String(i + 1).padStart(2, '0')}</span>
+                </div>
+                <div className="col-span-3 md:col-span-3">
+                  <div className="font-data-value text-data-value text-primary-fixed-dim font-bold">{entry.id}</div>
+                  <div className="font-data-label text-data-label text-outline text-[10px]">{entry.date}</div>
+                </div>
+                <div className="col-span-5 md:col-span-4 hidden md:block">
+                  <div className="font-body-sm text-body-sm text-on-surface">{entry.title}</div>
+                  <span className="font-data-label text-data-label text-[10px] text-on-surface-variant">{entry.tag}</span>
+                </div>
+                <div className="col-span-2 hidden md:block">
+                  <span className="font-data-label text-data-label text-on-surface-variant">{entry.examiner}</span>
+                </div>
+                <div className="col-span-8 md:col-span-2 flex items-center justify-between">
+                  <span className={`font-data-label text-data-label ${entry.statusColor || 'text-primary'}`}>
+                    {entry.status}
+                  </span>
+                  <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
+                    chevron_right
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </main>
 

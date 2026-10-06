@@ -2,22 +2,47 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const mongoose = require('mongoose');
 const Case = require('../models/Case');
 const Analysis = require('../models/Analysis');
 
-// Set up multer for file uploads
+// Ensure uploads folder exists regardless of where process was spawned
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Multer storage configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    const ext = path.extname(file.originalname) || '.png';
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
   },
 });
 
-const upload = multer({ storage: storage });
+// File filter to allow only image files
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = /jpeg|jpg|png|webp|tiff|bmp/;
+  const mimeMatch = allowedTypes.test(file.mimetype);
+  const extMatch = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+
+  if (mimeMatch || extMatch) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only JPG, PNG, WEBP, and TIFF images are permitted.'), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit
+  fileFilter: fileFilter,
+});
 
 // Verification & Test DB endpoint
 router.get('/test-db', async (req, res) => {
@@ -30,11 +55,11 @@ router.get('/test-db', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'MongoDB Atlas is connected and responding!',
+      message: isConnected ? 'MongoDB Atlas is connected and responding!' : 'MongoDB is running in offline fallback mode.',
       database: {
         status: isConnected ? 'connected' : 'disconnected',
-        dbName: mongoose.connection.name,
-        host: mongoose.connection.host,
+        dbName: mongoose.connection.name || null,
+        host: mongoose.connection.host || null,
       },
       counts: {
         cases: caseCount,
@@ -78,11 +103,31 @@ router.post('/seed', async (req, res) => {
         tag: 'Unknown · Arch',
         notes: 'Distorted friction ridge pattern. Requires secondary specialist validation.',
       },
+      {
+        caseId: 'CASE-2024-004',
+        title: 'LAT-017 — Smudged Ridge Analysis',
+        examiner: 'C. Park',
+        status: 'Verified',
+        tag: 'Right Middle · Loop',
+        notes: 'Smudged latent print analyzed with contrast enhancement.',
+      },
+      {
+        caseId: 'CASE-2023-099',
+        title: 'CMP-088 — Cross-Reference Study',
+        examiner: 'A. Reyes',
+        status: 'Verified',
+        tag: 'Comparative · Whorl/Loop',
+        notes: 'Cross-reference benchmark study for tenprint comparison protocols.',
+      },
     ];
 
-    await Case.deleteMany({});
-    const inserted = await Case.insertMany(dummyCases);
-    res.json({ success: true, message: `Seeded ${inserted.length} dummy cases into MongoDB!`, data: inserted });
+    if (mongoose.connection.readyState === 1) {
+      await Case.deleteMany({});
+      const inserted = await Case.insertMany(dummyCases);
+      return res.json({ success: true, message: `Seeded ${inserted.length} cases into MongoDB!`, data: inserted });
+    }
+
+    res.json({ success: true, message: 'Seeded in memory (MongoDB not connected).', data: dummyCases });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -92,14 +137,23 @@ router.post('/seed', async (req, res) => {
 router.get('/recent-analyses', async (req, res) => {
   try {
     if (mongoose.connection.readyState === 1) {
-      const records = await Analysis.find().sort({ createdAt: -1 }).limit(5).lean();
+      const records = await Analysis.find().sort({ createdAt: -1 }).limit(10).lean();
       if (records && records.length > 0) {
         const formatted = records.map((item, index) => ({
           id: item.caseId || `FS-${item._id.toString().slice(-4)}`,
           idx: String(index + 1).padStart(2, '0'),
-          date: new Date(item.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          date: new Date(item.createdAt).toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
           tag: `${item.patternType || 'Fingerprint'}`,
           status: item.status || 'verified',
+          qualityScore: item.qualityScore,
+          confidence: item.confidence,
+          imageUrl: item.imageUrl,
         }));
         return res.json(formatted);
       }
@@ -116,6 +170,8 @@ router.get('/recent-analyses', async (req, res) => {
       date: 'Oct 24, 2024 • 14:32 Z',
       tag: 'Right Thumb - Whorl',
       status: 'pending',
+      qualityScore: 92,
+      confidence: '95%',
     },
     {
       id: 'FS-2024-080',
@@ -123,6 +179,8 @@ router.get('/recent-analyses', async (req, res) => {
       date: 'Oct 24, 2024 • 11:15 Z',
       tag: 'Left Index - Loop',
       status: 'verified',
+      qualityScore: 88,
+      confidence: '94%',
     },
     {
       id: 'FS-2024-079',
@@ -130,6 +188,8 @@ router.get('/recent-analyses', async (req, res) => {
       date: 'Oct 23, 2024 • 09:45 Z',
       tag: 'Unknown - Arch',
       status: 'anomaly',
+      qualityScore: 74,
+      confidence: '81%',
     },
   ]);
 });
@@ -154,6 +214,7 @@ router.get('/cases', async (req, res) => {
           status: c.status,
           statusColor: statusColors[c.status] || 'text-primary',
           tag: c.tag,
+          notes: c.notes || '',
         }));
         return res.json(formatted);
       }
@@ -172,14 +233,67 @@ router.get('/cases', async (req, res) => {
       status: 'Verified',
       statusColor: 'text-primary',
       tag: 'Right Thumb · Whorl',
+      notes: 'Latent print recovered from glassware. Minutiae matched with 98% confidence.',
+    },
+    {
+      id: 'CASE-2024-002',
+      title: 'REF-991 — Tenprint Comparison',
+      examiner: 'A. Reyes',
+      date: 'Oct 22, 2024',
+      status: 'Pending Review',
+      statusColor: 'text-secondary',
+      tag: 'Left Index · Loop',
+      notes: 'Comparison against state automated fingerprint identification system (AFIS).',
+    },
+    {
+      id: 'CASE-2024-003',
+      title: 'EXH-039 — Partial Print Recovery',
+      examiner: 'J. Morrison',
+      date: 'Oct 19, 2024',
+      status: 'Anomaly',
+      statusColor: 'text-error',
+      tag: 'Unknown · Arch',
+      notes: 'Distorted friction ridge pattern. Requires secondary specialist validation.',
+    },
+    {
+      id: 'CASE-2024-004',
+      title: 'LAT-017 — Smudged Ridge Analysis',
+      examiner: 'C. Park',
+      date: 'Oct 15, 2024',
+      status: 'Verified',
+      statusColor: 'text-primary',
+      tag: 'Right Middle · Loop',
+      notes: 'Smudged latent print analyzed with contrast enhancement.',
+    },
+    {
+      id: 'CASE-2023-099',
+      title: 'CMP-088 — Cross-Reference Study',
+      examiner: 'A. Reyes',
+      date: 'Dec 01, 2023',
+      status: 'Verified',
+      statusColor: 'text-primary',
+      tag: 'Comparative · Whorl/Loop',
+      notes: 'Cross-reference benchmark study for tenprint comparison protocols.',
     },
   ]);
 });
 
 // Endpoint to upload a fingerprint image and save analysis to MongoDB
-router.post('/analyze', upload.single('fingerprint'), async (req, res) => {
+router.post('/analyze', (req, res, next) => {
+  upload.single('fingerprint')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'File size exceeds maximum allowed limit of 15MB.' });
+      }
+      return res.status(400).json({ error: `Upload error: ${err.message}` });
+    } else if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    next();
+  });
+}, async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ error: 'No image uploaded' });
+    return res.status(400).json({ error: 'No image uploaded. Please provide a biometric fingerprint image.' });
   }
 
   const minutiaeList = [
@@ -225,13 +339,14 @@ router.post('/analyze', upload.single('fingerprint'), async (req, res) => {
     },
   ];
 
-  const qualityScore = Math.floor(Math.random() * 15) + 85;
+  const qualityScore = Math.floor(Math.random() * 12) + 86; // 86% - 97%
+  const caseId = 'FS-' + Date.now().toString().slice(-6);
 
   let savedRecord = null;
   if (mongoose.connection.readyState === 1) {
     try {
       savedRecord = await Analysis.create({
-        caseId: 'FS-' + Date.now().toString().slice(-6),
+        caseId: caseId,
         imageUrl: `/uploads/${req.file.filename}`,
         originalName: req.file.originalname,
         qualityScore,
@@ -247,7 +362,7 @@ router.post('/analyze', upload.single('fingerprint'), async (req, res) => {
 
   const responseData = {
     id: savedRecord ? savedRecord._id : undefined,
-    caseId: savedRecord ? savedRecord.caseId : 'FS-2024-088',
+    caseId: savedRecord ? savedRecord.caseId : caseId,
     imageUrl: `/uploads/${req.file.filename}`,
     originalName: req.file.originalname,
     qualityScore,
@@ -255,11 +370,10 @@ router.post('/analyze', upload.single('fingerprint'), async (req, res) => {
     confidence: '94%',
     minutiaePoints: minutiaeList,
     savedToDatabase: !!savedRecord,
+    timestamp: new Date().toISOString(),
   };
 
-  setTimeout(() => {
-    res.json(responseData);
-  }, 1000);
+  res.json(responseData);
 });
 
 module.exports = router;

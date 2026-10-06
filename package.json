@@ -4,10 +4,14 @@
   "description": "FINGERSCOPE AI Forensic Lab",
   "scripts": {
     "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run dev --prefix BACKEND\" \"npm run dev --prefix FROTEND\"",
-    "start": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run dev --prefix BACKEND\" \"npm run dev --prefix FROTEND\"",
+    "start": "node BACKEND/server.js",
+    "start:dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run dev --prefix BACKEND\" \"npm run dev --prefix FROTEND\"",
+    "build": "npm run build --prefix FROTEND",
+    "build:frontend": "npm run build --prefix FROTEND",
+    "lint": "npm run lint --prefix FROTEND",
     "dev:backend": "npm run dev --prefix BACKEND",
     "dev:frontend": "npm run dev --prefix FROTEND",
-    "build:frontend": "npm run build --prefix FROTEND"
+    "seed": "npm run seed --prefix BACKEND"
   },
   "devDependencies": {
     "concurrently": "^10.0.5"

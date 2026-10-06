@@ -14,7 +14,7 @@ const caseCard = {
 export default function GalleryPracticeMode() {
   const navigate = useNavigate();
   const [started, setStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState('15:00');
+  const [timeLeft] = useState('15:00');
 
   return (
     <div className="bg-background text-on-surface font-body-lg min-h-screen flex flex-col pt-16 pb-24 md:pb-0">
