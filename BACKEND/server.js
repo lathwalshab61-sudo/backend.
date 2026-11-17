@@ -27,8 +27,21 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 connectDB();
 
 // CORS configuration
+const allowedOrigins =
+  CORS_ORIGIN === '*'
+    ? '*'
+    : CORS_ORIGIN.split(',')
+        .map((o) => o.trim().replace(/\/+$/, ''))
+        .filter(Boolean);
+
 const corsOptions = {
-  origin: CORS_ORIGIN === '*' ? true : CORS_ORIGIN.split(',').map((o) => o.trim()),
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins === '*' || allowedOrigins.includes(origin.replace(/\/+$/, ''))) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -47,6 +60,22 @@ if (!fs.existsSync(uploadsDir)) {
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(uploadsDir));
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    name: 'FINGERSCOPE AI Forensic Lab API',
+    message: 'Backend server is running successfully.',
+    environment: NODE_ENV,
+    endpoints: {
+      health: '/health',
+      cases: '/api/cases',
+      analyses: '/api/analyses',
+      stats: '/api/stats',
+    },
+  });
+});
 
 // API Routes
 app.use('/api', apiRoutes);
