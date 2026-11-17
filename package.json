@@ -8,6 +8,7 @@
     "start:dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,magenta\" \"npm run dev --prefix BACKEND\" \"npm run dev --prefix FROTEND\"",
     "build": "npm run build --prefix FROTEND",
     "build:frontend": "npm run build --prefix FROTEND",
+    "build:backend": "npm run build --prefix BACKEND",
     "lint": "npm run lint --prefix FROTEND",
     "dev:backend": "npm run dev --prefix BACKEND",
     "dev:frontend": "npm run dev --prefix FROTEND",
