@@ -1,4 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const rawApiBase =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://forensic-1-2.onrender.com' : '');
+const API_BASE = rawApiBase.replace(/\/+$/, '');
 
 /**
  * Check backend API and database health
