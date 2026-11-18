@@ -13,7 +13,7 @@ const CaseSchema = new mongoose.Schema(
     },
     examiner: {
       type: String,
-      default: 'Unknown Examiner',
+      default: 'Forensic Division',
     },
     status: {
       type: String,
@@ -23,6 +23,18 @@ const CaseSchema = new mongoose.Schema(
     tag: {
       type: String,
       default: 'General Fingerprint',
+    },
+    chapter: {
+      type: String,
+    },
+    forensicFocus: {
+      type: String,
+    },
+    keyLesson: {
+      type: String,
+    },
+    summary: {
+      type: String,
     },
     notes: {
       type: String,

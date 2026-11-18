@@ -214,6 +214,10 @@ router.get('/cases', async (req, res) => {
           status: c.status,
           statusColor: statusColors[c.status] || 'text-primary',
           tag: c.tag,
+          chapter: c.chapter || '',
+          forensicFocus: c.forensicFocus || '',
+          keyLesson: c.keyLesson || '',
+          summary: c.summary || '',
           notes: c.notes || '',
         }));
         return res.json(formatted);
@@ -239,43 +243,42 @@ router.get('/cases', async (req, res) => {
       id: 'CASE-2024-002',
       title: 'REF-991 — Tenprint Comparison',
       examiner: 'A. Reyes',
-      date: 'Oct 22, 2024',
+      date: 'Oct 24, 2024',
       status: 'Pending Review',
       statusColor: 'text-secondary',
       tag: 'Left Index · Loop',
       notes: 'Comparison against state automated fingerprint identification system (AFIS).',
     },
-    {
-      id: 'CASE-2024-003',
-      title: 'EXH-039 — Partial Print Recovery',
-      examiner: 'J. Morrison',
-      date: 'Oct 19, 2024',
-      status: 'Anomaly',
-      statusColor: 'text-error',
-      tag: 'Unknown · Arch',
-      notes: 'Distorted friction ridge pattern. Requires secondary specialist validation.',
-    },
-    {
-      id: 'CASE-2024-004',
-      title: 'LAT-017 — Smudged Ridge Analysis',
-      examiner: 'C. Park',
-      date: 'Oct 15, 2024',
-      status: 'Verified',
-      statusColor: 'text-primary',
-      tag: 'Right Middle · Loop',
-      notes: 'Smudged latent print analyzed with contrast enhancement.',
-    },
-    {
-      id: 'CASE-2023-099',
-      title: 'CMP-088 — Cross-Reference Study',
-      examiner: 'A. Reyes',
-      date: 'Dec 01, 2023',
-      status: 'Verified',
-      statusColor: 'text-primary',
-      tag: 'Comparative · Whorl/Loop',
-      notes: 'Cross-reference benchmark study for tenprint comparison protocols.',
-    },
   ]);
+});
+
+// Create new case (allows adding real case studies from web or books)
+router.post('/cases', async (req, res) => {
+  try {
+    const { caseId, title, examiner, status, tag, chapter, forensicFocus, keyLesson, summary, notes } = req.body;
+    if (!caseId || !title) {
+      return res.status(400).json({ error: 'caseId and title are required fields' });
+    }
+    const newCase = new Case({
+      caseId: caseId.trim(),
+      title: title.trim(),
+      examiner: examiner?.trim() || 'Forensic Examiner',
+      status: status || 'Verified',
+      tag: tag || 'General Fingerprint',
+      chapter: chapter || 'Textbook Case Study',
+      forensicFocus: forensicFocus || '',
+      keyLesson: keyLesson || '',
+      summary: summary || '',
+      notes: notes || '',
+    });
+    await newCase.save();
+    res.status(201).json({ success: true, case: newCase });
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({ error: 'A case with this Case ID already exists.' });
+    }
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Endpoint to upload a fingerprint image and save analysis to MongoDB

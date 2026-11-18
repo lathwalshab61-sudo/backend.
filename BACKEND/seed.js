@@ -2,8 +2,10 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Case = require('./models/Case');
 const Analysis = require('./models/Analysis');
+const safersteinCases = require('./data/safersteinCases');
 
 const dummyCases = [
+  ...safersteinCases,
   {
     caseId: 'CASE-2024-001',
     title: 'EXH-042 — Latent Lift Analysis',

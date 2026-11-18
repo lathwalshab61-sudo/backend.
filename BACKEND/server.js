@@ -17,6 +17,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const apiRoutes = require('./routes/api');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -79,6 +80,7 @@ app.get('/', (req, res) => {
 
 // API Routes
 app.use('/api', apiRoutes);
+app.use('/api/auth', authRoutes);
 
 // Health check with DB status
 app.get('/health', (req, res) => {

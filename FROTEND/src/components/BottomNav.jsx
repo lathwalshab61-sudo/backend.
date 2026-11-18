@@ -2,10 +2,10 @@ import { NavLink } from 'react-router-dom';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: 'dashboard' },
-  { to: '/analysis', label: 'Analysis', icon: 'biotech' },
-  { to: '/comparison', label: 'Compare', icon: 'compare' },
   { to: '/academy/archive', label: 'Cases', icon: 'folder_open' },
+  { to: '/academy/quiz', label: 'Quiz', icon: 'quiz' },
   { to: '/academy', label: 'Academy', icon: 'school' },
+  { to: '/profile', label: 'Profile', icon: 'account_circle' },
 ];
 
 export default function BottomNav() {
