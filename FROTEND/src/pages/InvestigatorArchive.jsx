@@ -114,8 +114,13 @@ export default function InvestigatorArchive() {
                     state: {
                       analysisData: {
                         caseId: entry.id,
+                        title: entry.title,
                         patternType: entry.tag || 'Loop (Ulnar)',
                         status: entry.status?.toLowerCase() === 'verified' ? 'verified' : 'pending',
+                        qualityScore: 92,
+                        confidence: '95%',
+                        date: entry.date,
+                        examiner: entry.examiner,
                       },
                     },
                   })

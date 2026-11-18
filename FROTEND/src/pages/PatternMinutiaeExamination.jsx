@@ -32,6 +32,13 @@ export default function PatternMinutiaeExamination() {
 
               {/* Top Case Bar */}
               <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-surface/80 backdrop-blur-md px-3 py-1.5 rounded border border-outline-variant/30">
+                <button
+                  onClick={() => navigate(-1)}
+                  className="text-on-surface-variant hover:text-primary transition-colors flex items-center mr-1 cursor-pointer bg-transparent border-0"
+                  title="Go back"
+                >
+                  <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+                </button>
                 <span className="font-data-label text-data-label text-primary">CASE RECORD:</span>
                 <span className="font-data-value text-data-value text-on-surface">{caseId}</span>
               </div>

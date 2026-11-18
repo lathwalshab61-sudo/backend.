@@ -19,7 +19,7 @@ const caseStudies = [
     lessonColor: 'text-primary-fixed',
     btnLabel: 'Review Module',
     btnClasses: 'bg-primary-container text-on-primary-fixed hover:bg-primary-fixed',
-    to: '/academy/archive',
+    to: '/academy/gallery-practice',
   },
   {
     id: 2,
@@ -38,7 +38,7 @@ const caseStudies = [
     lessonColor: 'text-secondary-fixed',
     btnLabel: 'Continue Module',
     btnClasses: 'bg-surface-bright text-on-surface hover:bg-surface-variant ghost-border',
-    to: '/academy/archive',
+    to: '/academy/practice',
   },
   {
     id: 3,
@@ -57,7 +57,7 @@ const caseStudies = [
     lessonColor: 'text-tertiary-fixed',
     btnLabel: 'Start Module',
     btnClasses: 'bg-surface-bright text-on-surface hover:bg-surface-variant ghost-border',
-    to: '/academy/archive',
+    to: '/academy/timeline',
   },
 ];
 
@@ -107,7 +107,8 @@ export default function ForensicGallery() {
           {caseStudies.map((c) => (
             <div
               key={c.id}
-              className="bg-surface-container-high/60 backdrop-blur-md rounded-xl ghost-border overflow-hidden flex flex-col group cursor-pointer hover:border-primary-container transition-colors"
+              onClick={() => navigate(c.to)}
+              className="bg-surface-container-high/60 backdrop-blur-md rounded-xl ghost-border overflow-hidden flex flex-col group cursor-pointer hover:border-primary-container transition-all hover:-translate-y-1 shadow-lg"
             >
               {/* Card Image */}
               <div className="relative h-48 bg-surface-container-highest fp-texture flex items-center justify-center overflow-hidden">

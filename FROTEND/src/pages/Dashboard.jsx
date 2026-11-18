@@ -135,20 +135,30 @@ export default function Dashboard() {
           <div className="lg:col-span-8 flex flex-col gap-gutter">
             <div className="flex items-center justify-between border-b border-outline-variant/10 pb-2 mb-2">
               <h2 className="font-headline-sm text-headline-sm">Recent Analyses</h2>
-              <button
-                onClick={() => navigate('/analysis')}
-                className="font-data-label text-data-label text-primary hover:underline bg-transparent border-0 flex items-center gap-1"
-              >
-                New Scan{' '}
-                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
-              </button>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate('/academy/archive')}
+                  className="font-data-label text-data-label text-on-surface-variant hover:text-primary transition-colors bg-transparent border-0 flex items-center gap-1 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[16px]">folder_open</span>
+                  All Cases
+                </button>
+                <button
+                  onClick={() => navigate('/analysis')}
+                  className="font-data-label text-data-label text-primary hover:underline bg-transparent border-0 flex items-center gap-1 cursor-pointer"
+                >
+                  New Scan{' '}
+                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+              </div>
             </div>
 
             <div className="flex flex-col gap-2">
               {analyses.map((item) => (
                 <GlassPanel
                   key={item.id}
-                  className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group"
+                  onClick={() => navigate('/analysis/result', { state: { analysisData: item } })}
+                  className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group cursor-pointer hover:border-primary/40 transition-colors"
                 >
                   <div className="flex items-center gap-4">
                     <span className="font-data-label text-data-label text-outline w-8">{item.idx}</span>
