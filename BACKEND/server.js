@@ -28,26 +28,23 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 connectDB();
 
 // CORS configuration
-const allowedOrigins =
-  CORS_ORIGIN === '*'
-    ? '*'
-    : CORS_ORIGIN.split(',')
-        .map((o) => o.trim().replace(/\/+$/, ''))
-        .filter(Boolean);
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins === '*' || allowedOrigins.includes(origin.replace(/\/+$/, ''))) {
-      callback(null, true);
-    } else {
-      callback(new Error(`Origin ${origin} not allowed by CORS`));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-};
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+);
+app.options(
+  '*',
+  cors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+  })
+);
 
 // Body parsers
 app.use(express.json({ limit: '10mb' }));
@@ -73,14 +70,15 @@ app.get('/', (req, res) => {
       health: '/health',
       cases: '/api/cases',
       analyses: '/api/analyses',
+      auth: '/api/auth',
       stats: '/api/stats',
     },
   });
 });
 
 // API Routes
-app.use('/api', apiRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api', apiRoutes);
 
 // Health check with DB status
 app.get('/health', (req, res) => {
@@ -137,8 +135,8 @@ app.use('/api', (req, res) => {
 app.use((err, req, res, _next) => {
   console.error('Unhandled Error:', err.message);
   res.status(err.status || 500).json({
-    error: 'Internal Server Error',
-    message: NODE_ENV === 'production' ? 'An unexpected server error occurred.' : err.message,
+    error: err.message || 'Internal Server Error',
+    message: err.message || 'An unexpected server error occurred.',
   });
 });
 
