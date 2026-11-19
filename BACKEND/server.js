@@ -27,17 +27,8 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 // Connect to MongoDB
 connectDB();
 
-// CORS configuration
+// CORS configuration - handles all requests including preflight OPTIONS
 app.use(
-  cors({
-    origin: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
-);
-app.options(
-  '*',
   cors({
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
